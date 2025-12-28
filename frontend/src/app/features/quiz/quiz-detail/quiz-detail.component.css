@@ -1,0 +1,27 @@
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+h3 {
+    margin-bottom: 15px;
+    color: #3f51b5;
+}
+
+.radio-option {
+    display: block;
+    margin: 10px 0;
+}
+
+.submit-container {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.submit-container button {
+    font-size: 16px;
+    padding: 10px 40px;
+}

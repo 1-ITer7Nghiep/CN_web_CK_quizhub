@@ -1,0 +1,137 @@
+<div class="container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ isEditMode ? 'Cập Nhật Quiz' : 'Tạo Quiz Mới' }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Tiêu đề Quiz</mat-label>
+                    <input matInput formControlName="title" required>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Mô tả</mat-label>
+                    <textarea matInput formControlName="description" rows="3" required></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Thời gian (phút)</mat-label>
+                    <input matInput type="number" formControlName="duration" required>
+                </mat-form-field>
+
+                <mat-divider></mat-divider>
+
+                <div formArrayName="questions">
+                    <div *ngFor="let question of questions.controls; let i = index" class="question-container">
+                        <div [formGroupName]="i">
+                            <h3>Câu hỏi {{ i + 1 }}</h3>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Nội dung câu hỏi</mat-label>
+                                <input matInput formControlName="questionText" required>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Lựa chọn 1</mat-label>
+                                <input matInput formControlName="option1" required>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Lựa chọn 2</mat-label>
+                                <input matInput formControlName="option2" required>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Lựa chọn 3</mat-label>
+                                <input matInput formControlName="option3" required>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Lựa chọn 4</mat-label>
+                                <input matInput formControlName="option4" required>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Đáp án đúng (1-4)</mat-label>
+                                <input matInput type="number" formControlName="correctAnswer" min="1" max="4" required>
+                            </mat-form-field>
+
+                            <button mat-raised-button color="warn" type="button" (click)="removeQuestion(i)"
+                                class="remove-btn">
+                                Xóa câu hỏi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button mat-raised-button color="accent" type="button" (click)="addQuestion()" class="add-btn">
+                    <mat-icon>add</mat-icon>
+                    Thêm câu hỏi
+                </button>
+
+                <mat-divider></mat-divider>
+
+                <div class="import-section"
+                    style="margin: 20px 0; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <h3>Import Câu Hỏi Nhanh</h3>
+
+                    <mat-accordion>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <mat-icon style="margin-right: 8px;">help_outline</mat-icon>
+                                    Xem Hướng Dẫn Định Dạng File Word/PDF
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div class="instruction-content">
+                                <p><strong>Copy và dán nội dung sau vào file Word (.docx) của bạn:</strong></p>
+                                <pre style="background: #eee; padding: 10px; border-radius: 4px;">
+Câu 1: Thủ đô của Việt Nam là gì?
+A. Hà Nội
+B. Hồ Chí Minh
+C. Đà Nẵng
+D. Cần Thơ
+Đáp án: A
+
+Câu 2: ...
+                                </pre>
+                                <ul>
+                                    <li>Mỗi câu bắt đầu bằng "Câu X:" hoặc "Question X:"</li>
+                                    <li>Các đáp án bắt đầu bằng "A.", "B.", "C.", "D."</li>
+                                    <li>Dòng cuối phải là "Đáp án: X" (hoặc "Answer: X")</li>
+                                </ul>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+
+                    <div style="margin-top: 15px;">
+                        <input type="file" #fileInput (change)="onFileSelected($event)" accept=".json, .docx, .pdf"
+                            style="display: none;">
+                        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
+                            <mat-icon>upload_file</mat-icon>
+                            Chon File (.docx, .pdf, .json)
+                        </button>
+                        <span class="hint" style="display: block; margin-top: 5px; font-size: 13px; color: #666;">
+                            Hệ thống sẽ tự động đọc câu hỏi từ file của bạn.
+                        </span>
+                        <div *ngIf="loading" style="margin-top: 10px;">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <span style="font-size: 12px;">Đang xử lý file...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <div class="actions">
+                    <button mat-raised-button type="button" (click)="cancel()">Hủy</button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!quizForm.valid">
+                        {{ isEditMode ? 'Cập Nhật' : 'Tạo Quiz' }}
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,45 @@
+<div class="profile-container">
+    <mat-toolbar color="primary">
+        <button mat-icon-button (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span>Hồ sơ của tôi</span>
+        <span class="spacer"></span>
+    </mat-toolbar>
+
+    <div class="content">
+        <div class="user-info" *ngIf="user">
+            <div class="avatar-placeholder">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <h2>{{ user.username }}</h2>
+            <p class="role-badge">{{ user.role }}</p>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h3>Quiz của tôi đã tạo ({{ myQuizzes.length }})</h3>
+
+        <div *ngIf="loading" class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <div class="quiz-grid" *ngIf="!loading">
+            <mat-card *ngFor="let quiz of myQuizzes" class="quiz-card">
+                <mat-card-header>
+                    <mat-card-title>{{ quiz.title }}</mat-card-title>
+                    <mat-card-subtitle>{{ quiz.duration }} phút</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <p>{{ quiz.description }}</p>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                    <button mat-button color="primary" (click)="startQuiz(quiz.id)">Xem chi tiết</button>
+                </mat-card-actions>
+            </mat-card>
+
+            <div *ngIf="myQuizzes.length === 0 && !loading" class="empty-state">
+                <p>Bạn chưa tạo quiz nào.</p>
+                <button mat-raised-button color="accent" routerLink="/quiz/create">Tạo Quiz ngay</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+<mat-toolbar color="primary">
+    <span>QuizHub</span>
+    <span class="spacer"></span>
+    <button mat-button (click)="createQuiz()">
+        <mat-icon>add</mat-icon>
+        Tạo Quiz
+    </button>
+    <button mat-button (click)="viewResults()">
+        <mat-icon>assessment</mat-icon>
+        Kết quả
+    </button>
+
+    <button mat-icon-button [matMenuTriggerFor]="notificationMenu" (menuOpened)="loadNotifications()">
+        <mat-icon [matBadge]="unreadCount" [matBadgeHidden]="unreadCount === 0"
+            matBadgeColor="warn">notifications</mat-icon>
+    </button>
+    <mat-menu #notificationMenu="matMenu">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 16px;">
+            <span style="font-weight: bold; font-size: 14px;">Thông báo</span>
+            <button mat-icon-button (click)="loadNotifications()">
+                <mat-icon style="font-size: 18px;">refresh</mat-icon>
+            </button>
+        </div>
+        <mat-divider></mat-divider>
+        <div *ngIf="notifications.length === 0" style="padding: 10px; color: gray; text-align: center;">
+            Không có thông báo mới
+        </div>
+        <button mat-menu-item *ngFor="let notif of notifications"
+            [style.background-color]="notif.read ? 'transparent' : '#e3f2fd'" (click)="markAsRead(notif)">
+            <mat-icon *ngIf="notif.type.includes('REPORT')" color="primary">info</mat-icon>
+            <span [class.read-text]="notif.read">{{ notif.message }}</span>
+        </button>
+    </mat-menu>
+
+    <button mat-button (click)="goToProfile()" style="margin-right: 10px;">
+        <mat-icon>person</mat-icon> Hồ sơ
+    </button>
+
+    <button mat-button *ngIf="authService.isAdmin()" (click)="goToAdmin()">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Admin
+    </button>
+    <button mat-button (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Đăng xuất
+    </button>
+</mat-toolbar>
+
+<div class="container">
+    <h2>Danh sách Quiz</h2>
+
+    <div *ngIf="loading" class="loading-container">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div *ngIf="!loading" class="card-grid">
+        <mat-card *ngFor="let quiz of quizzes" class="quiz-card">
+            <mat-card-header>
+                <mat-card-title>{{ quiz.title }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>{{ quiz.description }}</p>
+                <p><strong>Thời gian:</strong> {{ quiz.duration }} phút</p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="startQuiz(quiz.id)">
+                    Bắt đầu
+                </button>
+                <button mat-raised-button color="accent" *ngIf="canDelete(quiz)" (click)="editQuiz(quiz.id)">
+                    Sửa
+                </button>
+                <button mat-raised-button color="warn" *ngIf="canDelete(quiz)" (click)="deleteQuiz(quiz)">
+                    Xóa
+                </button>
+                <!-- Add Spacer to push report button to the right or just add it -->
+                <button mat-icon-button color="warn" (click)="reportQuiz($event, quiz)" matTooltip="Báo cáo vi phạm">
+                    <mat-icon>flag</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
+    <div *ngIf="!loading && quizzes.length === 0" class="empty-state">
+        <mat-icon>quiz</mat-icon>
+        <p>Chưa có quiz nào. Hãy tạo quiz đầu tiên!</p>
+    </div>
+</div>

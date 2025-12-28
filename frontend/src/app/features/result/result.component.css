@@ -1,0 +1,39 @@
+.spacer {
+    flex: 1 1 auto;
+}
+
+h2 {
+    color: white;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.result-card {
+    margin: 15px 0;
+}
+
+.result-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: white;
+}
+
+.empty-state mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+}

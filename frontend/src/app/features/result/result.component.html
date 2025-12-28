@@ -1,0 +1,45 @@
+<mat-toolbar color="primary">
+    <span>Kết quả Quiz</span>
+    <span class="spacer"></span>
+    <button mat-button (click)="backToQuizList()">
+        <mat-icon>arrow_back</mat-icon>
+        Quay lại
+    </button>
+</mat-toolbar>
+
+<div class="container">
+    <h2>Lịch sử làm bài của bạn</h2>
+
+    <div *ngIf="loading" class="loading-container">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div *ngIf="!loading && results.length > 0">
+        <mat-card *ngFor="let result of results" class="result-card">
+            <mat-card-header>
+                <mat-card-title>{{ result.quizTitle }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="result-details">
+                    <div>
+                        <strong>Điểm:</strong>
+                        <span [ngClass]="getScoreClass(result.score)">
+                            {{ result.score.toFixed(2) }}%
+                        </span>
+                    </div>
+                    <div>
+                        <strong>Thời gian:</strong> {{ formatDate(result.timestamp) }}
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div *ngIf="!loading && results.length === 0" class="empty-state">
+        <mat-icon>assessment</mat-icon>
+        <p>Bạn chưa làm quiz nào. Hãy bắt đầu ngay!</p>
+        <button mat-raised-button color="primary" (click)="backToQuizList()">
+            Khám phá Quiz
+        </button>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="container">
+    <mat-card *ngIf="quiz">
+        <mat-card-header>
+            <mat-card-title>{{ quiz.title }}</mat-card-title>
+            <mat-card-subtitle>{{ quiz.description }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="timer">
+                <mat-icon>timer</mat-icon>
+                <span>{{ formattedTime }}</span>
+            </div>
+
+            <div *ngIf="loading" class="loading-container">
+                <mat-spinner></mat-spinner>
+            </div>
+
+            <div *ngIf="!loading">
+                <div *ngFor="let question of questions; let i = index" class="quiz-question">
+                    <h3>Câu {{ i + 1 }}: {{ question.questionText }}</h3>
+
+                    <mat-radio-group (change)="selectAnswer(question.id, $event.value)">
+                        <mat-radio-button [value]="1" class="radio-option">
+                            {{ getOption(question, 1) }}
+                        </mat-radio-button>
+                        <mat-radio-button [value]="2" class="radio-option">
+                            {{ getOption(question, 2) }}
+                        </mat-radio-button>
+                        <mat-radio-button [value]="3" class="radio-option">
+                            {{ getOption(question, 3) }}
+                        </mat-radio-button>
+                        <mat-radio-button [value]="4" class="radio-option">
+                            {{ getOption(question, 4) }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+
+            <div class="submit-container">
+                <button mat-raised-button color="primary" (click)="submitQuiz()" [disabled]="loading">
+                    Nộp bài
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
